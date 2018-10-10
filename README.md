@@ -13,7 +13,7 @@ For detailed instructions on how to add the Learning Journal to the Rise course,
 
 ### Add the Learning Journal files
 
-After outputting the Rise course into Web format, the following two files must be included alongside the index.html file of the Rise course:
+After outputting the Rise course, the following two files must be included alongside the index.html file of the Rise course:
 * Learningjournal.js
 * Learningjournal.css
 
