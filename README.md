@@ -6,7 +6,7 @@ The Learning Journal allows a learner of an Articulate Rise course to enter text
 
 ### Edit the Rise Course
 
-For detailed instructions on how to add the Learning Journal to the Rise course, see the HOW-TO.
+For detailed instructions on how to add the Learning Journal to the Rise course, see the [HOW-TO](https://github.com/mikeamelang/learning-journal/raw/master/Learning%20Journal%20HOW-TO.docx).
 
 ### Add the Learning Journal files
 
