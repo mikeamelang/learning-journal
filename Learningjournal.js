@@ -3,10 +3,10 @@
   Custom Learning Journal in Rise
   -------------------------------
 
-  (details about this functionality are found at
-  \\nord\deptinternal\HQ\HR\LD\Projects\Rise module Learning Journal customization code files)
+  Project page: https://github.com/mikeamelang/learning-journal
 
-  The Custom Learning Journal allows a learner to enter text responses to
+
+  The Learning Journal allows a learner to enter text responses to
   journal prompts throughout a Rise module. At the end of the module, the learner
   can print their “learning journal” of all their responses. The responses are saved
   to the computer so that they persist on future visits to the Rise module.
