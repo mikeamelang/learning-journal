@@ -6,13 +6,13 @@ The Learning Journal allows a learner of an Articulate Rise course to enter text
 
 ### Edit the Rise Course
 
-For detailed instructions on how to add the Learning Journal to the Rise course, see the HOW-TO.
+For detailed instructions on how to add the Learning Journal to the Rise course, see the [HOW-TO](https://github.com/mikeamelang/learning-journal/raw/master/Learning%20Journal%20HOW-TO.docx).
 
 ### Add the Learning Journal files
 
 After outputting the Rise course into Web format, the following two files must be included alongside the index.html file of the Rise course:
-* Nordstrom.js
-* Nordstrom.css
+* Learningjournal.js
+* Learningjournal.css
 
 ### Edit the index.html
 
@@ -23,3 +23,7 @@ These two files must be linked in the index.html by including the following thre
 <link type="text/css" rel="stylesheet" href="learningjournal.css">
 <script src="learningjournal.js"></script>
 ```
+
+## Notes
+
+The formatting can be customized by using the Learningjournal.css file.
