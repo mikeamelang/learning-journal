@@ -491,7 +491,7 @@ function printEntries( TakeActionsOnly ) {
   var myWindow = window.open("","Print " + getTimestamp(),"width=810,height=610,scrollbars=1,resizable=1");
 	myWindow.document.write(contents);
 
-	let myStringOfstyles =  "@media print { .no-print, .no-print * { display: none !important; } }" +
+	var myStringOfstyles =  "@media print { .no-print, .no-print * { display: none !important; } }" +
 							"body { width:650px;padding:20px;font-family:sans-serif }" +
 							".printbutton { height:20px;padding:10px;margin-bottom:20px;text-align:center; }" +
 							".headertext { text-transform: uppercase;text-align:center;font-size:22px; " +
@@ -513,13 +513,13 @@ function printEntries( TakeActionsOnly ) {
               "    -webkit-print-color-adjust: exact;color: white; font-weight: bold; " +
               "    padding: 8px 10px;line-height:15pt; }";
 							//".section { font-size: 18px;font-weight:bold;margin-top: 50px;text-align: center;margin-bottom: 15px  }";
-	let linkElement = myWindow.document.createElement('link');
+	var linkElement = myWindow.document.createElement('link');
 	linkElement.setAttribute('rel', 'stylesheet');
 	linkElement.setAttribute('type', 'text/css');
 	linkElement.setAttribute('href', 'data:text/css;charset=UTF-8,' + encodeURIComponent(myStringOfstyles));
 	myWindow.document.head.appendChild(linkElement);
 
-  let titleElement = myWindow.document.createElement('title');
+  var titleElement = myWindow.document.createElement('title');
   var t = myWindow.document.createTextNode("Print " + printtitle);
   titleElement.appendChild(t);
   myWindow.document.head.appendChild(titleElement);
