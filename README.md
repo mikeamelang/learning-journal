@@ -11,8 +11,8 @@ For detailed instructions on how to add the Learning Journal to the Rise course,
 ### Add the Learning Journal files
 
 After outputting the Rise course into Web format, the following two files must be included alongside the index.html file of the Rise course:
-* Nordstrom.js
-* Nordstrom.css
+* Learningjournal.js
+* Learningjournal.css
 
 ### Edit the index.html
 
@@ -23,3 +23,7 @@ These two files must be linked in the index.html by including the following thre
 <link type="text/css" rel="stylesheet" href="learningjournal.css">
 <script src="learningjournal.js"></script>
 ```
+
+## Notes
+
+The formatting can be customized by using the Learningjournal.css file.
