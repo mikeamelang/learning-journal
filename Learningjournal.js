@@ -75,7 +75,7 @@ var courseTitle = '';
 // localStorageItem is the item in localStorage where the journal entry data is stored.
 // a unique identifier is formed by concatenating
 // localStorageItem_prefix and the URL path up to the html file.
-var localStorageItem_prefix = 'Nordstrom_LearningJournal_';
+var localStorageItem_prefix = 'LearningJournal_';
 var localStorageItem = '';
 
 // image in the printed journal header
@@ -105,7 +105,7 @@ $(document).ready(function() {
 function setlocalStorageItem() {
   var loc = document.location;
   var uniqueURL = loc.origin + loc.pathname.substring(0, loc.pathname.lastIndexOf("/"));
-  return localStorageItem_prefix + encodeURIComponent(uniqueURL);
+  localStorageItem = localStorageItem_prefix + encodeURIComponent(uniqueURL);
 }
 
 
@@ -459,13 +459,17 @@ function printEntries( TakeActionsOnly ) {
   for (var i = 0; i< UserData.Sections.length; i++ ) {
        var currentSection = UserData.Sections[i];
 
-       var sectionheader = "<div class='sectiontitle' >Section: " + currentSection.title + "</div>" +
-          "<div class='sectionintrocontainer' >" +
-          "<img class='sectionintroicon' src='" + imageIntroHeader + "' />" +
-          "<div class='sectionintrotextcontainer'>" +
-            "<div class='sectionintrotitle'>" + currentSection.introtitle + "</div>" +
-            "<div class='sectionintrotext'>" + currentSection.introtext + "</div>" +
-          "</div></div>";
+       var sectionheader = "<div class='sectiontitle' >Section: " + currentSection.title + "</div>";
+       if ( currentSection.introtitle ) {
+         sectionheader +=
+           "<div class='sectionintrocontainer' >" +
+             "<img class='sectionintroicon' src='" + imageIntroHeader + "' />" +
+             "<div class='sectionintrotextcontainer'>" +
+               "<div class='sectionintrotitle'>" + currentSection.introtitle + "</div>" +
+               "<div class='sectionintrotext'>" + currentSection.introtext + "</div>" +
+           "</div></div>";
+       }
+
 
        var sectioncontents = '';
        for (var j = 0; j< currentSection.entries.length; j++ ) {
