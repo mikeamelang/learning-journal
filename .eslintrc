@@ -1,0 +1,26 @@
+{
+
+  /* "extends": "google", */
+  "extends": "eslint:recommended",
+
+  "env": {
+    "es6": true, /* added when working with babel. can remove if babel install fails */
+    /* "node": true,
+    "browser": true */
+  },
+
+  "globals": {
+        "$": false
+    },
+
+  "rules": {
+    "linebreak-style": 0, /* because this is Windows enviro */
+    "max-len": ["error", { "code": 120 ,
+                          "ignoreComments": true }],
+    "no-undef": 0, /* because otherwise functions/variables from a different js file throw errors */
+    "no-useless-escape": 0, /* because fixField has regex that causes this error */
+    "no-console": 1, /* because dumpObject function's purpose is console.log */
+
+  }
+
+}
