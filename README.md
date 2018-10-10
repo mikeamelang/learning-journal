@@ -1,6 +1,6 @@
 # Learning Journal for Articulate Rise
 
-The Learning Journal allows a learner of an Articulate Rise course to enter text responses to journal prompts throughout a Rise module. At the end of the module, the learner can print their learning journal of all their responses. The responses are saved to the browser so that they persist on future visits to the Rise course. 
+The Learning Journal allows a learner of an Articulate Rise course to enter text responses to journal prompts throughout a Rise module. At the end of the module, the learner can print their learning journal of all their responses or just the Take Action ones. The responses are saved to the browser so that they persist on future visits to the Rise course. 
 
 See the example Rise course at http://amelangrise.s3.amazonaws.com/learningjournal/index.html
 
