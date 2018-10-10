@@ -19,7 +19,7 @@ After outputting the Rise course, the following two files must be included along
 
 ### Edit the index.html
 
-These two files must be linked in the index.html by including the following three lines in the <head> of the index.html file of the Rise course:
+These two files must be linked in the index.html by including the following three lines in the `<head>` of the index.html file of the Rise course:
   
 ```
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
