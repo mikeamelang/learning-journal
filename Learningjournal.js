@@ -79,7 +79,7 @@ var localStorageItem_prefix = 'LearningJournal_';
 var localStorageItem = '';
 
 // image in the printed journal header
-var imageIntroHeader = 'https://cdn.articulate.com/rise/courses/m3yORZJJSFbUv2ZpVonKs810UK-k5ImE/wjc82ap7WJP1Pywk.png';
+var imageIntroHeader = 'http://amelangrise.s3.amazonaws.com/SharedAssets/images/Reflection_Dark.png';
 
 // These are the settings used by the autosave of journal entries
 var typingTimer;                //  timer identifier
