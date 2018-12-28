@@ -1,9 +1,14 @@
+## [1.4] - 2020-01-21
+### Added
+- Email My Journal button functionality added
+
+
 ## [1.3] - 2020-01-20
 ### Added
 - Sections can be ordered with "Section Order:#"
 
 
-## [1.2] - 2019-6-20
+## [1.2] - 2019-6-24
 ### Changed
 - added initialProcessNotes to run processNotes multiple times when page loads
 

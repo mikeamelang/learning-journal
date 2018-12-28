@@ -2,7 +2,8 @@
 
   Custom Learning Journal in Rise
   -------------------------------
-
+  
+  version: 1.4
   Project page: https://github.com/mikeamelang/learning-journal
 
 
@@ -26,18 +27,22 @@
 
     Section Intro
     Section: <insert section name here>
+    Section Order: <insert printing order number here. This is optional)
     Intro Title: <insert title to the intro here, like Reflection Activity>
     Intro Text: <insert the text of the intro here>
 
   HOW TO ADD PRINT BUTTONS OR PROVIDE A CUSTOM TITLE TO THE LEARNING JOURNAL:
   Two print buttons will be shown: Print all journal items and Print take
   action items only. (The actual text of these buttons is customized with the variables below:
-  PrintAllButton_Text and PrintTakeActionsOnly_Text)
+  PrintAllButton_Text, PrintTakeActionsOnly_Text and EmailButton_Text)
   Wherever the print buttons are desired in the Rise module, add a new block of type
   “NOTE” from the “STATEMENT” area and enter the following text:
 
     Journal Buttons
     Course Title: <insert course title here>
+    Include Email Button: <yes/no> (This is not required. Default is no.)
+    Email Address: <insert email to which journals will be emailed> (This is only required
+      if the above "Include Email Button" is set to true.)
 
 */
 
@@ -57,6 +62,8 @@ var sectionlabel = "Section:";
 var promptlabel = "Prompt:";
 var takeactionlabel = "Take Action:";
 var coursetitlelabel = "Course Title:";
+var includeEmailButtonLabel = "Include Email Button:";
+var emailAddressLabel = "Email Address:";
 var introsectionlabel = "Section:";
 var introSectionOrderLabel = "Section Order:";
 var introtitlelabel = "Intro Title:";
@@ -65,6 +72,8 @@ var introtextlabel = "Intro Text:";
 // These are the text for the Print buttons
 var PrintAllButton_Text = "Print My Journal";
 var PrintTakeActionsOnly_Text = "Print My Actions";
+var EmailButton_Text = "Email My Journal"; // text for the Email button, if active
+
 
 // These are the data storage variables. When the course loads, these are filled
 // with any existing journal entries found in localStorage. Likewise, when any entries are
@@ -379,12 +388,28 @@ function createEntryfromNote( note ) {
 */
 function processButtons( note ) {
 
+  var includeEmailButton = false;
+  var emailAddress = '';
+
   // Set Course Title
   var notecontents = note.querySelector(noteContentsSelector);
   for (var i = 0; i< notecontents.childNodes.length; i++ ) {
     var a = notecontents.childNodes[i];
+
+    // Set the Course Title
     if ( a.innerText.substring(0,coursetitlelabel.length) == coursetitlelabel ) {
       courseTitle = a.innerText.substring(coursetitlelabel.length).trim();
+    }
+
+    // Include an Email button
+    if ( a.innerText.substring(0,includeEmailButtonLabel.length) == includeEmailButtonLabel ) {
+      var emailButtonSetting = a.innerText.replace(includeEmailButtonLabel, "").trim();
+      if ( emailButtonSetting.toLowerCase() == "yes" ) { includeEmailButton = true }
+    }
+
+    // Email address to which the journals will be emailed
+    if ( a.innerText.substring(0,emailAddressLabel.length) == emailAddressLabel ) {
+      emailAddress = a.innerText.substring(emailAddressLabel.length).trim();
     }
   }
 
@@ -404,6 +429,15 @@ function processButtons( note ) {
   button2.addEventListener("click", function() { printEntries(true)} );
   container.appendChild(button2);
   note.parentNode.appendChild(container);
+
+  if ( includeEmailButton ) {
+    var button3 = document.createElement("div");
+    button3.className = "journalprintbutton";
+    button3.innerText = EmailButton_Text;
+    button3.addEventListener("click", function() { emailEntries( emailAddress )} );
+    container.appendChild(button3);
+    note.parentNode.appendChild(container);
+  }
 }
 
 
@@ -591,6 +625,53 @@ function printEntries( TakeActionsOnly ) {
     return m_names[mm]+' '+dd+', '+yyyy;
   }
 }
+
+
+/**
+  * @desc emails the entries
+  * @param none
+  * @return none
+*/
+function emailEntries( emailAddress ) {
+
+  var printtitle = "Learning Journal";
+  var lineBreak = '%0D';
+	var contents = courseTitle + lineBreak + printtitle + lineBreak + lineBreak;
+  contents+= "------------------------------" + lineBreak;
+
+  // print each entry if applicable
+  for (var i = 0; i< UserData.Sections.length; i++ ) {
+       var currentSection = UserData.Sections[i];
+
+       var sectionheader = "Section: " + currentSection.title + lineBreak;
+       if ( currentSection.introtitle ) {
+         sectionheader +=
+           currentSection.introtitle + lineBreak +
+           currentSection.introtext + lineBreak + lineBreak;
+       }
+
+
+       var sectioncontents = '';
+       for (var j = 0; j< currentSection.entries.length; j++ ) {
+          if ( currentSection.entries[j].response != '' ) {
+            sectioncontents+= currentSection.entries[j].prompt + lineBreak;
+            sectioncontents+= currentSection.entries[j].response + lineBreak + lineBreak;
+          }
+       }
+       if (sectioncontents != '' ) {
+          contents+= sectionheader + sectioncontents;
+          if (i != UserData.Sections.length - 1 ) { contents+= "------------------------------" + lineBreak }
+       }
+    //}
+  }
+
+
+  window.open('mailto:' + emailAddress +
+              '?subject=My Learning Journal&body=' + contents);
+
+
+}
+
 
 
 /**
