@@ -91,8 +91,9 @@ var doneTypingInterval = 400;  //  time in ms
 $(document).ready(function() {
   setlocalStorageItem();
   getSectionsfromLocalStorage();
-  processNotes();
+  initialProcessNotes();
   addEvents();
+
 });
 
 
@@ -107,6 +108,26 @@ function setlocalStorageItem() {
   var uniqueURL = loc.origin + loc.pathname.substring(0, loc.pathname.lastIndexOf("/"));
   localStorageItem = localStorageItem_prefix + encodeURIComponent(uniqueURL);
 }
+
+
+
+/**
+  * @desc Run processNotes several times when the page first loads
+  * @return none
+*/
+function initialProcessNotes(  ) {
+  var MAX_INSTANCES = 5;
+  var instances = 0;
+  var myInterval = setInterval(myTimerProcessNotes, 300);
+  function myTimerProcessNotes() {
+    instances++;
+    if (instances === MAX_INSTANCES ) {
+      clearInterval(myInterval);
+    }
+    if (processNotes()) { clearInterval(myInterval) }
+  }
+}
+
 
 
 /**
@@ -124,12 +145,16 @@ function addEvents() {
 
   // fire processNotes when the CONTINUE button is clicked and new blocks are dynamically added
   function nodeadded(event) {
-    if( event.relatedNode.nodeName == "SECTION" && event.relatedNode.className == "blocks-lesson") {
-      processNotes();
+    if( event.relatedNode.nodeName == "SECTION" ) {
+      if ( event.relatedNode.className == "blocks-lesson" ) {
+        processNotes();
+      }
     }
+
   }
   window.addEventListener("DOMNodeInserted", nodeadded, false);
 }
+
 
 
 /**
@@ -191,11 +216,13 @@ function getSectionsfromLocalStorage() {
   * @desc This is the workhorse of the learning journal. It finds all the Notes on the page
   *   and processes them depending on what type of Note it is
   * @param none
-  * @return none
+  * @return true if Notes were found
 */
 function processNotes() {
 
     var $notes = $( noteSelector);
+    var returnValue = ($notes.length > 0) ? true : false ;
+
     $notes.each( function() {
       this.style.display = "none";
       switch (this.querySelector(noteContentsSelector).firstChild.innerText.trim()) {
@@ -218,6 +245,7 @@ function processNotes() {
       this.parentNode.removeChild(this);
     });
     setSectionstoLocalStorage();
+    return returnValue;
 }
 
 
