@@ -1,3 +1,8 @@
+## [1.3] - 2020-01-20
+### Added
+- Sections can be ordered with "Section Order:#"
+
+
 ## [1.2] - 2019-6-20
 ### Changed
 - added initialProcessNotes to run processNotes multiple times when page loads

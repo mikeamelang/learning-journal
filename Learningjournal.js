@@ -58,6 +58,7 @@ var promptlabel = "Prompt:";
 var takeactionlabel = "Take Action:";
 var coursetitlelabel = "Course Title:";
 var introsectionlabel = "Section:";
+var introSectionOrderLabel = "Section Order:";
 var introtitlelabel = "Intro Title:";
 var introtextlabel = "Intro Text:";
 
@@ -164,8 +165,12 @@ function addEvents() {
   * @param string introtext - text of the section intro that appears in printed journal
   * @return none
 */
-function Section( title, introtitle, introtext ) {
+function Section( title, order, introtitle, introtext ) {
+  if (!order) {
+    order = 999
+  }
 	this["title"] = title;
+  this["order"] = order;
   this["entries"] = [];
   introtitle = (introtitle) ? introtitle : '';
   this["introtitle"] = introtitle; // optional
@@ -410,7 +415,7 @@ function processButtons( note ) {
 function processIntro( note ) {
 
   var notecontents = note.querySelector(noteContentsSelector);
-  var introsection = '', introtitle = '', introtext = '';
+  var introsection = '', introSectionOrder = 999, introtitle = '', introtext = '';
   for (var i = 0; i< notecontents.childNodes.length; i++ ) {
     var a = notecontents.childNodes[i];
 
@@ -418,7 +423,14 @@ function processIntro( note ) {
     if ( a.innerText.substring(0,introsectionlabel.length) == introsectionlabel ) {
       introsection = a.innerText.substring(introsectionlabel.length).trim();
     }
-        // set the intro title
+    // set the intro section index
+    if ( a.innerText.substring(0,introSectionOrderLabel.length) == introSectionOrderLabel ) {
+      introSectionOrder = parseInt(a.innerText.substring(introSectionOrderLabel.length).trim());
+      if ( introSectionOrder !== introSectionOrder ) { //  is not a number
+        introSectionOrder = 999
+      }
+    }
+    // set the intro title
     if ( a.innerText.substring(0,introtitlelabel.length) == introtitlelabel ) {
       introtitle = a.innerText.substring(introtitlelabel.length).trim();
     }
@@ -436,19 +448,33 @@ function processIntro( note ) {
   }
 
   if (introsection != '' && introtitle != '' && introtext != '') {
-    var index = -1;
+    var sectionMatch = -1;
     for (var j = 0; j < UserData.Sections.length; j++) {
-      if ( UserData.Sections[j].title == introsection ) { index = j; }
+      if ( UserData.Sections[j].title == introsection ) { sectionMatch = j; }
     }
 
-    if (index == -1) {
+    if (sectionMatch == -1) {
       // new section
-      UserData.Sections.push( new Section( introsection, introtitle, introtext ) );
+      UserData.Sections.push( new Section( introsection, introSectionOrder, introtitle, introtext ) );
     } else {
       // existing section
-      UserData.Sections[index].introtitle = introtitle;
-      UserData.Sections[index].introtext = introtext;
+      UserData.Sections[sectionMatch].order = introSectionOrder;
+      UserData.Sections[sectionMatch].introtitle = introtitle;
+      UserData.Sections[sectionMatch].introtext = introtext;
     }
+    UserData.Sections.sort( compareOrders )
+  }
+
+  // SUB function
+  // Sorts an array of objects on a particular property
+  function compareOrders( a, b ) {
+    if ( a.order < b.order ){
+      return -1;
+    }
+    if ( a.order > b.order ){
+      return 1;
+    }
+    return 0;
   }
 }
 
@@ -585,4 +611,9 @@ function getTimestamp() {
     var sec = today.getSeconds();
     if(sec<10) { sec='0'+sec }
     return today.getFullYear() + mm + dd + hh+ min + sec ;
+}
+
+// Polyfill for isNaN
+Number.isNaN = Number.isNaN || function(value) {
+    return value !== value;
 }
