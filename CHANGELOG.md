@@ -1,3 +1,8 @@
+## [1.X] - 2019-11-23
+### Added
+- Added Submit button and Feedback text
+
+
 ## [1.2] - 2019-6-20
 ### Changed
 - added initialProcessNotes to run processNotes multiple times when page loads

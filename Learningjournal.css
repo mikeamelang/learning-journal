@@ -23,22 +23,46 @@
     height:5em;
 }
 
-.journalbuttons-container{
+.journalbuttons-container {
   text-align: center;
 }
 
-.journalprintbutton {
+.journalsubmitbutton-container {
+  text-align: right;
+}
+
+.journalbutton {
   padding: 5px 10px;
-  background-color: black;
   display: inline-block;
   margin-bottom: 15px;
-  color: white;
-  margin-right: 20px;
   padding-left: 20px;
   padding-right: 20px;
 }
 
-.journalprintbutton:hover {
+.journalbutton-print {
+  color: white;
+  background-color: black;
+  margin-right: 20px;
+}
+
+.journalbutton-submit {
+  color: black;
+  background-color: lightblue;
+  margin-right: 0
+}
+
+.journalbutton:hover {
   opacity:.7;
   cursor:pointer;
+}
+
+.journalentry-feedbackcontainer {
+  display: none;
+  color: white;
+  margin-top: 15px
+}
+
+.journalentry-feedbacktext {
+  font-size: 75%;
+  font-weight: 100;
 }

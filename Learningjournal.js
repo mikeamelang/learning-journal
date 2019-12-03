@@ -19,6 +19,8 @@
     Section: <insert section name here>
     Prompt: <insert prompt here>
     Take Action: yes <if this is a Take Action item>
+    Button: yes <if there is a Submit button>
+    Feedback: <insert feedback text which appears when Submit button is clicked>
 
   HOW TO ADD AN INTRO TO A SECTION ON THE PRINTED JOURNAL:
   Wherever an intro to a section is needed in the Rise module, add a new block of type
@@ -56,14 +58,17 @@ var flagIntro = "Section Intro";
 var sectionlabel = "Section:";
 var promptlabel = "Prompt:";
 var takeactionlabel = "Take Action:";
+var buttonlabel = "Button:";
+var feedbacklabel = "Feedback:";
 var coursetitlelabel = "Course Title:";
 var introsectionlabel = "Section:";
 var introtitlelabel = "Intro Title:";
 var introtextlabel = "Intro Text:";
 
-// These are the text for the Print buttons
+// These are the text for the buttons
 var PrintAllButton_Text = "Print My Journal";
 var PrintTakeActionsOnly_Text = "Print My Actions";
+var SubmitButton_Text = "Submit";
 
 // These are the data storage variables. When the course loads, these are filled
 // with any existing journal entries found in localStorage. Likewise, when any entries are
@@ -180,13 +185,17 @@ function Section( title, introtitle, introtext ) {
   * @param string prompt - text of the prompt
   * @param string response - text of the response (blank if new)
   * @param bool isTakeAction - is this a Take Action?
+  * @param bool hasSubmitButton - does this have a submit button?
+  * @param string buttonFeedback - text of the feedback when the Submit button is pressed.
   * @return none
 */
-function Entry( section, prompt, response, isTakeAction ) {
+function Entry( section, prompt, response, isTakeAction, hasSubmitButton, buttonFeedback ) {
 	this["section"] = section;
 	this["prompt"] = prompt;
   this["response"] = response;
   this["isTakeAction"] = isTakeAction;
+  this["hasSubmitButton"] = hasSubmitButton;
+  this["buttonFeedback"] = buttonFeedback
   // another data element is entryid, added after the entry is created
   // another data element is sectionid, added after the entry is created
 }
@@ -325,11 +334,61 @@ function renderEntrytoDOM( parentcontainer, entry, sectionid, entryid ) {
     response.className = "journalentry-response";
     response.value = entry.response;
     container.appendChild(response);
+
+    if (entry.hasSubmitButton) {
+      // create submit button container
+      var submitbuttoncontainer = document.createElement("div");
+      submitbuttoncontainer.className = "journalsubmitbutton-container";
+
+      // create Submit button
+      var buttonSubmit = document.createElement("div");
+      buttonSubmit.className = "journalbutton journalbutton-submit";
+      buttonSubmit.innerText = SubmitButton_Text;
+      buttonSubmit.addEventListener("click", function(event) { revealFeedback(event.target)} );
+      submitbuttoncontainer.appendChild(buttonSubmit);
+      container.append(submitbuttoncontainer)
+
+      // create feedback container
+      var feedbackcontainer = document.createElement("div");
+      feedbackcontainer.className = "journalentry-feedbackcontainer";
+
+      // create feedback label
+      var feedbacklabel = document.createElement("div");
+      feedbacklabel.className = "journalentry-feedbacklabel";
+      feedbacklabel.innerText = "Feedback:";
+      feedbackcontainer.appendChild( feedbacklabel );
+
+      // create feedback text
+      var feedbacktext = document.createElement("div");
+      feedbacktext.className = "journalentry-feedbacktext";
+      feedbacktext.innerText = entry.buttonFeedback;
+      feedbackcontainer.appendChild( feedbacktext );
+
+      container.append(feedbackcontainer)
+    }
     parentcontainer.appendChild(container);
 
     $( ".block-impact--note:has( .journalentry-container)").addClass("block-impact--note-journalentry");
 }
 
+/**
+  * @desc Reveals the feedback that accompanies a submit button.
+  * @desc if the response is empty, nothing is revealed
+  * @param DOMElement cluckedButton - the submit button that was clicked
+  * @return none
+*/
+function revealFeedback(clickedButton) {
+
+  const currentResponseText = $(clickedButton).parents('.journalentry-container')
+                                              .find('.journalentry-response')[0]
+                                              .value
+  if ( currentResponseText != '' ) {
+    $(clickedButton).parent().next().slideDown()
+  } else {
+    alert("Please enter in a response before hitting Submit.")
+  }
+
+}
 
 /**
   * @desc creates an Entry object from a Note.
@@ -338,7 +397,7 @@ function renderEntrytoDOM( parentcontainer, entry, sectionid, entryid ) {
 */
 function createEntryfromNote( note ) {
 
-  var section = '', prompt = '', isTakeAction = false;
+  var section = '', prompt = '', isTakeAction = false; hasSubmitButton = false; buttonFeedback = ''
   var notecontents = note.querySelector(noteContentsSelector);
   for (var i = 0; i< notecontents.childNodes.length; i++ ) {
     var a = notecontents.childNodes[i];
@@ -356,10 +415,19 @@ function createEntryfromNote( note ) {
       var TakeActiontext = a.innerText.replace(takeactionlabel, "").trim();
       if ( TakeActiontext.toLowerCase() == "yes" ) { isTakeAction = true }
     }
+    // set the hasSubmitButton
+    if ( a.innerText.substring(0,buttonlabel.length) == buttonlabel ) {
+      var Buttontext = a.innerText.replace(buttonlabel, "").trim();
+      if ( Buttontext.toLowerCase() == "yes" ) { hasSubmitButton = true }
+    }
+    // set the buttonFeedback
+    if ( a.innerText.substring(0,feedbacklabel.length) == feedbacklabel ) {
+      buttonFeedback = a.innerText.replace(feedbacklabel, "").trim();
+    }
   }
 
   if (section != '' && prompt != '') {
-    return new Entry( section, prompt, '', isTakeAction); // response is added later
+    return new Entry( section, prompt, '', isTakeAction, hasSubmitButton, buttonFeedback ); // response is added later
   } else {
     return null;
   }
@@ -388,13 +456,13 @@ function processButtons( note ) {
   container.className = "journalbuttons-container";
 
   var button1 = document.createElement("div");
-  button1.className = "journalprintbutton";
+  button1.className = "journalbutton journalbutton-print";
   button1.innerText = PrintAllButton_Text;
   button1.addEventListener("click", function() { printEntries(false)} );
   container.appendChild(button1);
 
   var button2 = document.createElement("div");
-  button2.className = "journalprintbutton";
+  button2.className = "journalbutton journalbutton-print";
   button2.innerText = PrintTakeActionsOnly_Text;
   button2.addEventListener("click", function() { printEntries(true)} );
   container.appendChild(button2);
