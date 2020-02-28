@@ -2,8 +2,8 @@
 
   Custom Learning Journal in Rise
   -------------------------------
-  
-  version: 1.4
+
+  version: 1.5
   Project page: https://github.com/mikeamelang/learning-journal
 
 
@@ -94,6 +94,9 @@ var imageIntroHeader = 'http://amelangrise.s3.amazonaws.com/SharedAssets/images/
 // These are the settings used by the autosave of journal entries
 var typingTimer;                //  timer identifier
 var doneTypingInterval = 400;  //  time in ms
+
+// Test if browser is firefox (used in printEntries)
+var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 /* ------------------------------------------------------------------------------------------------ */
 
@@ -536,9 +539,13 @@ $(document).on('keyup', '.journalentry-response', function(){
 function printEntries( TakeActionsOnly ) {
 
   var printtitle = ( TakeActionsOnly ) ? "Take Action Items" : "Learning Journal";
+  var printCommand = (isFirefox)
+		? 'window.print()'
+		: 'document.execCommand(\"print\", false, null);';
 	var date = getDate();
+
 	var contents = "<html><head></head><body>"
-  contents+= "<div class='no-print printbutton' ><button onclick='document.execCommand(\"print\", false, null);'>" +
+  contents+= "<div class='no-print printbutton' ><button onclick='" + printCommand + "'>" +
     "Print My " + printtitle + "</button></div>";
 	contents+="<div class='headertext' >" + courseTitle + " " + printtitle + "</div>";
 	contents+="<div class='date' >"+date+"</div>";

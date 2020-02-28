@@ -1,3 +1,8 @@
+## [1.5] - 2020-02-27
+### Added
+- Firefox compatibility added
+
+
 ## [1.4] - 2020-01-21
 ### Added
 - Email My Journal button functionality added
