@@ -3,7 +3,7 @@
   Custom Learning Journal in Rise
   -------------------------------
 
-  version: 1.5
+  version: 2.0
   Project page: https://github.com/mikeamelang/learning-journal
 
 
@@ -47,7 +47,7 @@
 */
 
 // These css selectors select the Notes and select the contents of each Note
-var noteSelector = "[aria-label='Note']";
+var noteSelector =  ".block-impact--note .block-impact__row"; // "[aria-label='Note']";
 var noteContentsSelector = '.fr-view';
 
 // These are the flags that must appear at the first line of the Note or the

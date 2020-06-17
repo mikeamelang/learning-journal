@@ -1,3 +1,8 @@
+## [2.0] - 2020-06-17
+### Changed
+- Notes selector changed after an Articulate update
+
+
 ## [1.5] - 2020-02-27
 ### Added
 - Firefox compatibility added
