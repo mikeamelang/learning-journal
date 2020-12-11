@@ -1,3 +1,8 @@
+## [2.1] - 2020-12-10
+### Changed
+- Fixed bug where all notes are removed
+
+
 ## [2.0] - 2020-06-17
 ### Changed
 - Notes selector changed after an Articulate update
