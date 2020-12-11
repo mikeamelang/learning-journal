@@ -3,7 +3,7 @@
   Custom Learning Journal in Rise
   -------------------------------
 
-  version: 2.0
+  version: 2.1
   Project page: https://github.com/mikeamelang/learning-journal
 
 
@@ -241,25 +241,26 @@ function processNotes() {
     var returnValue = ($notes.length > 0) ? true : false ;
 
     $notes.each( function() {
-      this.style.display = "none";
       switch (this.querySelector(noteContentsSelector).firstChild.innerText.trim()) {
         case flagEntry:
           processEntry( this );
+          this.parentNode.removeChild(this);
           break;
 
         case flagButtons:
           processButtons( this);
+          this.parentNode.removeChild(this);
           break;
 
         case flagIntro:
           processIntro( this );
+          this.parentNode.removeChild(this);
           break;
 
         default:
           break;
       }
 
-      this.parentNode.removeChild(this);
     });
     setSectionstoLocalStorage();
     return returnValue;
