@@ -1,7 +1,7 @@
 
 /* set the background color of journal entries */
 .block-statement--note-journalentry {
-  background-color: #ffffff;
+  background-color: #4b4b4b;
 }
 
 
@@ -11,7 +11,7 @@
 }
 
 .journalentry-prompt {
-  color: #335d79 !important;
+  color:white !important;
 }
 
 .journalentry-prompt strong {
@@ -29,14 +29,13 @@
 
 .journalprintbutton {
   padding: 5px 10px;
-  background-color: #335d79;
+  background-color: black;
   display: inline-block;
   margin-bottom: 15px;
   color: white;
   margin-right: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-radius: 120px;
 }
 
 .journalprintbutton:hover {
