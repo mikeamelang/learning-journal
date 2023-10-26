@@ -3,7 +3,7 @@
   Custom Learning Journal in Rise
   -------------------------------
 
-  version: 2.1
+  version: 2.0
   Project page: https://github.com/mikeamelang/learning-journal
 
 
@@ -47,7 +47,7 @@
 */
 
 // These css selectors select the Notes and select the contents of each Note
-var noteSelector =  ".block-impact--note .block-impact__row"; // "[aria-label='Note']";
+var noteSelector =  ".block-statement--note .block-statement__row"; // "[aria-label='Note']";
 var noteContentsSelector = '.fr-view';
 
 // These are the flags that must appear at the first line of the Note or the
@@ -70,9 +70,9 @@ var introtitlelabel = "Intro Title:";
 var introtextlabel = "Intro Text:";
 
 // These are the text for the Print buttons
-var PrintAllButton_Text = "Print My Journal";
-var PrintTakeActionsOnly_Text = "Print My Actions";
-var EmailButton_Text = "Email My Journal"; // text for the Email button, if active
+var PrintAllButton_Text = "Save Course Notes";
+var PrintTakeActionsOnly_Text = "Save My Actions";
+var EmailButton_Text = "Email Course Notes"; // text for the Email button, if active
 
 
 // These are the data storage variables. When the course loads, these are filled
@@ -89,7 +89,16 @@ var localStorageItem_prefix = 'LearningJournal_';
 var localStorageItem = '';
 
 // image in the printed journal header
-var imageIntroHeader = 'http://amelangrise.s3.amazonaws.com/SharedAssets/images/Reflection_Dark.png';
+var imageIntroHeader = 'https://storage.googleapis.com/learningjournal/images/DialogueBoxes2.png';
+
+// logo image in the top lefthand corner in the printed journal
+var imageLogo = 'https://storage.googleapis.com/learningjournal/images/TravelersLogo.png';
+
+//dialogue box image at the top of the printed journal
+var shield = 'https://storage.googleapis.com/learningjournal/images/DialogueBoxes.png';
+
+//white shield image at the top of the printed journal
+var whiteshield = 'https://storage.googleapis.com/learningjournal/images/PENTAGON_LINES_White.png';
 
 // These are the settings used by the autosave of journal entries
 var typingTimer;                //  timer identifier
@@ -241,26 +250,25 @@ function processNotes() {
     var returnValue = ($notes.length > 0) ? true : false ;
 
     $notes.each( function() {
+      this.style.display = "none";
       switch (this.querySelector(noteContentsSelector).firstChild.innerText.trim()) {
         case flagEntry:
           processEntry( this );
-          this.parentNode.removeChild(this);
           break;
 
         case flagButtons:
           processButtons( this);
-          this.parentNode.removeChild(this);
           break;
 
         case flagIntro:
           processIntro( this );
-          this.parentNode.removeChild(this);
           break;
 
         default:
           break;
       }
 
+      this.parentNode.removeChild(this);
     });
     setSectionstoLocalStorage();
     return returnValue;
@@ -345,7 +353,7 @@ function renderEntrytoDOM( parentcontainer, entry, sectionid, entryid ) {
     container.appendChild(response);
     parentcontainer.appendChild(container);
 
-    $( ".block-impact--note:has( .journalentry-container)").addClass("block-impact--note-journalentry");
+    $( ".block-statement--note:has( .journalentry-container)").addClass("block-statement--note-journalentry");
 }
 
 
@@ -427,12 +435,6 @@ function processButtons( note ) {
   button1.addEventListener("click", function() { printEntries(false)} );
   container.appendChild(button1);
 
-  var button2 = document.createElement("div");
-  button2.className = "journalprintbutton";
-  button2.innerText = PrintTakeActionsOnly_Text;
-  button2.addEventListener("click", function() { printEntries(true)} );
-  container.appendChild(button2);
-  note.parentNode.appendChild(container);
 
   if ( includeEmailButton ) {
     var button3 = document.createElement("div");
@@ -479,7 +481,7 @@ function processIntro( note ) {
       // grab the rest of the Note for the text also
       i++;
       while (i < notecontents.childNodes.length) {
-        introtext += "<br /><br />" + notecontents.childNodes[i].innerText;
+        introtext += "\n\n" + notecontents.childNodes[i].innerText;
         i++;
       }
     }
@@ -539,17 +541,23 @@ $(document).on('keyup', '.journalentry-response', function(){
 */
 function printEntries( TakeActionsOnly ) {
 
-  var printtitle = ( TakeActionsOnly ) ? "Take Action Items" : "Learning Journal";
+  var printtitle = ( TakeActionsOnly ) ? "Take Action Items" : "Course Notes";
   var printCommand = (isFirefox)
 		? 'window.print()'
 		: 'document.execCommand(\"print\", false, null);';
 	var date = getDate();
 
 	var contents = "<html><head></head><body>"
-  contents+= "<div class='no-print printbutton' ><button onclick='" + printCommand + "'>" +
-    "Print My " + printtitle + "</button></div>";
+    contents+= "<div class='no-print printbutton' ><button onclick='" + printCommand + "'>" +
+    "Save My " + printtitle + "</button></div>";
+	// contents+="<div class=logocontainer'>" + "<img class='logo' src='" + imageLogo + "' />" + "</div>";
+	contents+="<br></br>";
 	contents+="<div class='headertext' >" + courseTitle + " " + printtitle + "</div>";
 	contents+="<div class='date' >"+date+"</div>";
+	// contents+="<div class=shieldcontainer'>" + "<img class='shield' align='middle' src='" + shield + "' />" + "</div>";
+	contents+="<br></br>";
+	
+	
 
   // print each entry if applicable
   for (var i = 0; i< UserData.Sections.length; i++ ) {
@@ -559,14 +567,13 @@ function printEntries( TakeActionsOnly ) {
        if ( currentSection.introtitle ) {
          sectionheader +=
            "<div class='sectionintrocontainer' >" +
-             "<img class='sectionintroicon' src='" + imageIntroHeader + "' />" +
+             // "<img class='sectionintroicon' src='" + imageIntroHeader + "' />" +
              "<div class='sectionintrotextcontainer'>" +
                "<div class='sectionintrotitle'>" + currentSection.introtitle + "</div>" +
-               "<div class='sectionintrotext'>" + currentSection.introtext + "</div>" +
-           "</div></div>";
+               "<div class='sectionintrotext'>" + currentSection.introtext + "</div>" + "</div></div>";
        }
 
-
+	  
        var sectioncontents = '';
        for (var j = 0; j< currentSection.entries.length; j++ ) {
           if ( (!TakeActionsOnly || currentSection.entries[j].isTakeAction == true) &&
@@ -590,13 +597,17 @@ function printEntries( TakeActionsOnly ) {
 	var myStringOfstyles =  "@media print { .no-print, .no-print * { display: none !important; } }" +
 							"body { width:650px;padding:20px;font-family:sans-serif }" +
 							".printbutton { height:20px;padding:10px;margin-bottom:20px;text-align:center; }" +
-							".headertext { text-transform: uppercase;text-align:center;font-size:22px; " +
-              "    font-weight:bold;margin-bottom:20px; background-color: #4c4c4c !important; " +
-              "    -webkit-print-color-adjust: exact;color: white; padding: 15px 20px; }" +
+							".logocontainer { margin-left: auto; margin-right: right; display: block; width: 500px;}" +
+							".logo { margin-left: auto; margin-right: right; display: block; height: 60px;}" +
+							".headertext { text-transform: uppercase;text-align:center;font-size:22px; " +	
+              "    font-weight:bold;margin-bottom:20px; background-color: #FFFFFF !important; " +
+              "    -webkit-print-color-adjust: exact;color: black; padding: 15px 20px; }" +
 							".date { font-size:16px;font-weight:bold;text-align: center;margin-bottom: 30px }" +
+							".shieldcontainer { margin-left: auto; margin-right: auto; display: block; width: 400px;}" +
+			  				".shield { margin-left: auto; margin-right: auto; display: block; width: 400px}" +
               ".sectionarea { margin-bottom:80px;}" +
               ".sectionintrocontainer { margin-bottom: 5px; color: black; padding: 25px 20px;}" +
-              ".sectionintroicon { height: 160px;  display: inline-block; padding: 0px 20px}" +
+              ".sectionintroicon { height: 160px;  display: inline-block; padding: 0px 20px;}" +
               ".sectionintrotextcontainer { display: inline-block; width: 330px; vertical-align: top;" +
               "    padding-left:20px}" +
               ".sectionintrotitle { font-weight: bold; font-size: 15pt;margin-bottom: 12px;}" +
@@ -605,7 +616,7 @@ function printEntries( TakeActionsOnly ) {
               ".pagebreak { page-break-before: always; }" +
               ".response { font-size: 11pt;border: 1.5px gray solid;padding: 15px;" +
               "    margin-bottom: 20px;white-space: pre-wrap; margin-top: 0px; }" +
-							".prompt { font-size: 16px; background-color: #4c4c4c !important; " +
+							".prompt { font-size: 16px; background-color: #335d79 !important; " +
               "    -webkit-print-color-adjust: exact;color: white; font-weight: bold; " +
               "    padding: 8px 10px;line-height:15pt; }";
 							//".section { font-size: 18px;font-weight:bold;margin-top: 50px;text-align: center;margin-bottom: 15px  }";
@@ -616,7 +627,7 @@ function printEntries( TakeActionsOnly ) {
 	myWindow.document.head.appendChild(linkElement);
 
   var titleElement = myWindow.document.createElement('title');
-  var t = myWindow.document.createTextNode("Print " + printtitle);
+  var t = myWindow.document.createTextNode("Save " + printtitle);
   titleElement.appendChild(t);
   myWindow.document.head.appendChild(titleElement);
 
@@ -642,7 +653,7 @@ function printEntries( TakeActionsOnly ) {
 */
 function emailEntries( emailAddress ) {
 
-  var printtitle = "Learning Journal";
+  var printtitle = "Course Notes";
   var lineBreak = '%0D';
 	var contents = courseTitle + lineBreak + printtitle + lineBreak + lineBreak;
   contents+= "------------------------------" + lineBreak;
@@ -675,7 +686,7 @@ function emailEntries( emailAddress ) {
 
 
   window.open('mailto:' + emailAddress +
-              '?subject=My Learning Journal&body=' + contents);
+              '?subject=Course Notes&body=' + contents);
 
 
 }
